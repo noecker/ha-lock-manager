@@ -1,0 +1,48 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Lock to Manage",
+        "description": "Select a Z-Wave lock to manage. Found {lock_count} Z-Wave locks.",
+        "data": {
+          "lock_entity_id": "Lock Entity",
+          "lock_name": "Lock Name",
+          "slots": "Number of Code Slots",
+          "notify_service": "Notification Service (e.g., mobile_app_phone)"
+        }
+      }
+    },
+    "error": {
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This lock is already configured",
+      "no_zwave_locks": "No Z-Wave locks found. Please ensure Z-Wave JS is set up with at least one lock."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Lock Manager Options",
+        "data": {
+          "notify_service": "Notification Service"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "active_codes": {
+        "name": "Active Codes"
+      },
+      "last_code_used": {
+        "name": "Last Code Used"
+      }
+    },
+    "switch": {
+      "code_enabled": {
+        "name": "Code {slot} Enabled"
+      }
+    }
+  }
+}

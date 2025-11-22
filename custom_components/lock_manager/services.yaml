@@ -1,0 +1,189 @@
+set_code:
+  name: Set Code
+  description: Set a code in a lock slot
+  fields:
+    lock_entity_id:
+      name: Lock Entity
+      description: The lock entity to set the code on
+      required: true
+      selector:
+        entity:
+          domain: lock
+          integration: zwave_js
+    code_slot:
+      name: Code Slot
+      description: The slot number (1-30 typically)
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: box
+    usercode:
+      name: User Code
+      description: The PIN code to set
+      required: true
+      selector:
+        text:
+          type: password
+    name:
+      name: Name
+      description: Friendly name for this code
+      required: false
+      selector:
+        text:
+    enabled:
+      name: Enabled
+      description: Whether the code should be active
+      required: false
+      default: true
+      selector:
+        boolean:
+    alert_on_use:
+      name: Alert on Use
+      description: Send notification when this code is used
+      required: false
+      default: false
+      selector:
+        boolean:
+    expiration:
+      name: Expiration
+      description: When this code should automatically expire (ISO datetime)
+      required: false
+      selector:
+        datetime:
+
+clear_code:
+  name: Clear Code
+  description: Clear a code from a lock slot
+  fields:
+    lock_entity_id:
+      name: Lock Entity
+      description: The lock entity to clear the code from
+      required: true
+      selector:
+        entity:
+          domain: lock
+          integration: zwave_js
+    code_slot:
+      name: Code Slot
+      description: The slot number to clear
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: box
+
+enable_code:
+  name: Enable Code
+  description: Enable a previously disabled code
+  fields:
+    lock_entity_id:
+      name: Lock Entity
+      description: The lock entity
+      required: true
+      selector:
+        entity:
+          domain: lock
+          integration: zwave_js
+    code_slot:
+      name: Code Slot
+      description: The slot number to enable
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: box
+
+disable_code:
+  name: Disable Code
+  description: Disable a code without deleting it
+  fields:
+    lock_entity_id:
+      name: Lock Entity
+      description: The lock entity
+      required: true
+      selector:
+        entity:
+          domain: lock
+          integration: zwave_js
+    code_slot:
+      name: Code Slot
+      description: The slot number to disable
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: box
+
+set_alert:
+  name: Set Alert
+  description: Enable or disable alerts for a code slot
+  fields:
+    lock_entity_id:
+      name: Lock Entity
+      description: The lock entity
+      required: true
+      selector:
+        entity:
+          domain: lock
+          integration: zwave_js
+    code_slot:
+      name: Code Slot
+      description: The slot number
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: box
+    alert_on_use:
+      name: Alert on Use
+      description: Whether to send alerts when this code is used
+      required: true
+      selector:
+        boolean:
+
+set_expiration:
+  name: Set Expiration
+  description: Set or clear expiration for a temporary code
+  fields:
+    lock_entity_id:
+      name: Lock Entity
+      description: The lock entity
+      required: true
+      selector:
+        entity:
+          domain: lock
+          integration: zwave_js
+    code_slot:
+      name: Code Slot
+      description: The slot number
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: box
+    expiration:
+      name: Expiration
+      description: When this code should expire (leave empty to clear expiration)
+      required: false
+      selector:
+        datetime:
+
+refresh_codes:
+  name: Refresh Codes
+  description: Refresh code data from the lock
+  fields:
+    lock_entity_id:
+      name: Lock Entity
+      description: The lock entity to refresh
+      required: true
+      selector:
+        entity:
+          domain: lock
+          integration: zwave_js

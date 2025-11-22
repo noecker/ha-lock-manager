@@ -1,0 +1,7 @@
+{
+  "name": "Lock Manager",
+  "render_readme": true,
+  "content_in_root": false,
+  "zip_release": false,
+  "filename": "lock-manager-card.js"
+}

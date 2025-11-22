@@ -1,0 +1,78 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Lock to Manage",
+        "description": "Select a Z-Wave lock to manage. Found {lock_count} Z-Wave locks.",
+        "data": {
+          "lock_entity_id": "Lock Entity",
+          "lock_name": "Lock Name",
+          "slots": "Number of Code Slots",
+          "notify_service": "Notification Service (e.g., mobile_app_phone)"
+        }
+      }
+    },
+    "error": {
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This lock is already configured",
+      "no_zwave_locks": "No Z-Wave locks found. Please ensure Z-Wave JS is set up with at least one lock."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Lock Manager Options",
+        "data": {
+          "notify_service": "Notification Service"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "active_codes": {
+        "name": "Active Codes"
+      },
+      "last_code_used": {
+        "name": "Last Code Used"
+      }
+    },
+    "switch": {
+      "code_enabled": {
+        "name": "Code {slot} Enabled"
+      }
+    }
+  },
+  "services": {
+    "set_code": {
+      "name": "Set Code",
+      "description": "Set a code in a lock slot"
+    },
+    "clear_code": {
+      "name": "Clear Code",
+      "description": "Clear a code from a lock slot"
+    },
+    "enable_code": {
+      "name": "Enable Code",
+      "description": "Enable a previously disabled code"
+    },
+    "disable_code": {
+      "name": "Disable Code",
+      "description": "Disable a code without deleting it"
+    },
+    "set_alert": {
+      "name": "Set Alert",
+      "description": "Enable or disable alerts for a code slot"
+    },
+    "set_expiration": {
+      "name": "Set Expiration",
+      "description": "Set or clear expiration for a temporary code"
+    },
+    "refresh_codes": {
+      "name": "Refresh Codes",
+      "description": "Refresh code data from the lock"
+    }
+  }
+}

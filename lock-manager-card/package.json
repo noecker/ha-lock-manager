@@ -1,0 +1,29 @@
+{
+  "name": "lock-manager-card",
+  "version": "1.0.0",
+  "description": "Lovelace card for Lock Manager integration",
+  "main": "dist/lock-manager-card.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": [
+    "home-assistant",
+    "lovelace",
+    "lock",
+    "z-wave"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup": "^4.9.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "lit": "^3.1.0"
+  }
+}
