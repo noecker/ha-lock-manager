@@ -1,17 +1,21 @@
 """The Lock Manager integration."""
 from __future__ import annotations
 
-import asyncio
 import logging
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
+from homeassistant.components.frontend import add_extra_js_url
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EVENT_HOMEASSISTANT_STARTED, Platform
+from homeassistant.const import Platform
 from homeassistant.core import Event, HomeAssistant, ServiceCall, callback
-from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.util import dt as dt_util
+
+# Frontend card paths
+CARD_URL_PATH = "/lock_manager/lock-manager-card.js"
 
 from .const import (
     ATTR_CODE_ALERT,
@@ -47,9 +51,36 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.SWITCH]
 
 
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+    """Set up the Lock Manager component."""
+    # Register the frontend card
+    await _async_register_card(hass)
+    return True
+
+
+async def _async_register_card(hass: HomeAssistant) -> None:
+    """Register the Lovelace card as a static resource."""
+    # Path to the card JS file
+    card_path = Path(__file__).parent / "www" / "lock-manager-card.js"
+
+    if card_path.exists():
+        # Register static path
+        await hass.http.async_register_static_paths(
+            [StaticPathConfig(CARD_URL_PATH, str(card_path), cache_headers=True)]
+        )
+        # Add as extra JS module for Lovelace
+        add_extra_js_url(hass, CARD_URL_PATH)
+        _LOGGER.debug("Registered Lock Manager card at %s", CARD_URL_PATH)
+    else:
+        _LOGGER.warning("Lock Manager card not found at %s", card_path)
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Lock Manager from a config entry."""
     hass.data.setdefault(DOMAIN, {})
+
+    # Ensure card is registered
+    await _async_register_card(hass)
 
     # Initialize store
     store = LockManagerStore(hass)

@@ -33,8 +33,7 @@ A Home Assistant custom integration for managing Z-Wave lock codes, specifically
 
 1. Download the latest release from GitHub
 2. Copy the `custom_components/lock_manager` folder to your Home Assistant `config/custom_components/` directory
-3. Copy `lock-manager-card/dist/lock-manager-card.js` to your `config/www/` directory
-4. Restart Home Assistant
+3. Restart Home Assistant
 
 ## Configuration
 
@@ -50,11 +49,9 @@ A Home Assistant custom integration for managing Z-Wave lock codes, specifically
 
 ### Adding the Lovelace Card
 
-1. Add the card resource (if using manual installation):
-   - Go to **Settings** > **Dashboards** > **Resources**
-   - Add `/local/lock-manager-card.js` as a JavaScript module
+The Lovelace card is **automatically registered** when you install the integration. No manual resource configuration needed!
 
-2. Add the card to your dashboard:
+Add the card to your dashboard:
    ```yaml
    type: custom:lock-manager-card
    entity: lock.front_door_lock
