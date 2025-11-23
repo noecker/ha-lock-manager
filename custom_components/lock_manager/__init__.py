@@ -297,46 +297,79 @@ def _setup_lock_event_listener(
     hass: HomeAssistant, store: LockManagerStore, lock_entity_id: str
 ) -> None:
     """Set up listener for Z-Wave lock events."""
+    from homeassistant.helpers import device_registry as dr, entity_registry as er
+
+    # Get the device_id for this lock entity to filter events
+    entity_reg = er.async_get(hass)
+    device_reg = dr.async_get(hass)
+
+    entity_entry = entity_reg.async_get(lock_entity_id)
+    lock_device_id = entity_entry.device_id if entity_entry else None
+
+    if lock_device_id is None:
+        _LOGGER.warning(
+            "Could not find device_id for lock %s, events may not be filtered correctly",
+            lock_entity_id,
+        )
+
+    # Schlage Z-Wave event values for Access Control notifications
+    # Event 5 = Keypad lock operation
+    # Event 6 = Keypad unlock operation
+    KEYPAD_LOCK_EVENT = 5
+    KEYPAD_UNLOCK_EVENT = 6
 
     @callback
     def handle_zwave_notification(event: Event) -> None:
         """Handle Z-Wave notification events from locks."""
         event_data = event.data
 
-        # Check if this is a lock notification
-        if event_data.get("domain") != "zwave_js":
+        # Get device_id from event
+        event_device_id = event_data.get("device_id")
+        if event_device_id is None:
             return
 
-        # Check if it's for our lock
-        device_id = event_data.get("device_id")
-        if device_id is None:
+        # Filter to only our lock's device
+        if lock_device_id is not None and event_device_id != lock_device_id:
             return
 
-        # Get node info
-        node_id = event_data.get("node_id")
+        # Check for Access Control notifications (label or command_class)
+        label = event_data.get("label", "")
         command_class = event_data.get("command_class")
 
-        # Lock notifications typically come from Notification CC (0x71) or
-        # Door Lock CC (0x62)
-        if command_class not in (98, 113):  # 0x62, 0x71
+        # Notification CC (113/0x71) with Access Control label
+        if command_class != 113 and "access control" not in label.lower():
             return
 
-        event_type = event_data.get("event_type")
-        event_type_label = event_data.get("event_type_label", "")
+        # Get event type (5=lock, 6=unlock for keypad operations)
+        event_value = event_data.get("event")
+        event_label = event_data.get("event_label", "")
         parameters = event_data.get("parameters", {})
 
-        # Check for lock/unlock events with user codes
+        # Check for keypad lock/unlock events with user codes
         user_id = parameters.get("userId")
         if user_id is None:
+            _LOGGER.debug(
+                "Lock event without userId: event=%s, label=%s, params=%s",
+                event_value,
+                event_label,
+                parameters,
+            )
             return
 
-        # Determine action
+        # Determine action from event value or label
         action = "unknown"
-        if "lock" in event_type_label.lower():
-            if "unlock" in event_type_label.lower():
-                action = "unlock"
-            else:
-                action = "lock"
+        if event_value == KEYPAD_UNLOCK_EVENT or "unlock" in event_label.lower():
+            action = "unlock"
+        elif event_value == KEYPAD_LOCK_EVENT or "lock" in event_label.lower():
+            action = "lock"
+
+        _LOGGER.debug(
+            "Lock code used: lock=%s, slot=%s, action=%s, event=%s",
+            lock_entity_id,
+            user_id,
+            action,
+            event_value,
+        )
 
         # Get slot data
         slot_data = store.get_slot(lock_entity_id, user_id)
