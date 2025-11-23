@@ -1,5 +1,7 @@
 # Lock Manager for Home Assistant
 
+> **Disclaimer:** This integration was built entirely by AI (Claude). If that bothers you, this isn't the project for you. No hard feelings.
+
 A Home Assistant custom integration for managing Z-Wave lock codes, specifically designed for Schlage Z-Wave locks. Includes a custom Lovelace card for easy code management.
 
 ## Features
